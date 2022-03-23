@@ -1,0 +1,9 @@
+# Dockerfile for Producer 
+FROM python
+RUN apt-get update
+RUN pip install flask
+RUN pip install pika
+
+COPY producer.py producer.py
+
+CMD ["python", "producer.py"]

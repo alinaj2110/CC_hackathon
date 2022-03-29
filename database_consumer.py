@@ -4,6 +4,9 @@ import sys
 import os
 import json
 import pymongo
+from time import sleep
+
+sleep(90)
 
 client = pymongo.MongoClient("localhost", 27017)
 db = client.consumerdb

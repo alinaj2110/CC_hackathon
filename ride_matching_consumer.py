@@ -5,12 +5,14 @@ import sys
 import os
 import json
 from time import sleep
+
+sleep(90)
 ## TO DELETE LATER
 CONSUMER_ID= 124
-PRODUCER_ADDRESS= '127.0.0.1:5000'
+PRODUCER_ADDRESS= 'http://127.0.0.1:5000/'
 
 init_req = {'consumerid':CONSUMER_ID,'ipaddr':'127.0.0.1:5020'}
-res = requests.post('http://'+PRODUCER_ADDRESS+'/new_ride_matching_consumer', json=init_req)
+res = requests.post(PRODUCER_ADDRESS+'/new_ride_matching_consumer', json=init_req)
 print(res.text)
 
 

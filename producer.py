@@ -2,6 +2,9 @@ from flask import Flask, request
 from random import randint
 import pika
 import json
+from time import sleep
+
+sleep(60)
 
 app = Flask(__name__)
 

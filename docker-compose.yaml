@@ -3,28 +3,39 @@
 version: "2.1"
 services:
   rabbitMQ_server:
-    image: 
-    container_name: 
+    image: rabbitmq
+    container_name: 'rabbitmq'
     ports:
-    restart:
+      - "5672:5672"
+    restart: "no"
   producer:
-    image: 
-    container_name:
-    restart: 
+    container_name: 'producer'
+    build:
+      dockerfile: Dockerfile_producer
+      context: .
+    restart: "no"
     ports:
+      - "5000"
     depends_on:
       - rabbitMQ_server
   ride_matching:
-    image: 
-    container_name: 
-    depends_on:
-    environment:
-      - CONSUMER_ID=
-      - PRODUCER_ADDRESS=
-  ride_database:
-    image: 
-    container_name:
-    restart: 
+    container_name: 'ride_matching'
+    build:
+      dockerfile: Dockerfile_ride_matching
+      context: .
     depends_on:
       - producer
+      - rabbitMQ_server
+    environment:
+      - CONSUMER_ID= 12345
+      - PRODUCER_ADDRESS= 'http://localhost:5000'
+  ride_database:
+    container_name: 'ride_database'
+    build:
+      dockerfile: Dockerfile_database
+      context: .
+    restart: "no"
+    depends_on:
+      - producer
+      - rabbitMQ_server
   

@@ -21,19 +21,19 @@ def main():
     def callback(ch, method, properties, body):
         body = body.decode('utf8').replace("'", '"')
         body = json.loads(body)
-        print(" [x] Received %r" % body)
+        print("\n\n============================================")
+        print("Database Received %r" % body)
+        print("============================================\n\n",)
         collection.insert_one({'cid':body['consumerid'],'ip':body['ipaddr']})
         
-        ##DEBUG
+        '''##DEBUG
         print("inserted into db")
         for item in collection.find():
             print(item)
-
+        '''
 
         
     channel.basic_consume(queue='database', on_message_callback=callback, auto_ack=True)
-
-    print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
 
 if __name__ == '__main__':

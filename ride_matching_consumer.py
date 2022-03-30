@@ -14,7 +14,6 @@ PRODUCER_ADDRESS= os.environ['PRODUCER_ADDRESS']
 def main():
     init_req = {'consumerid':CONSUMER_ID,'ipaddr':'127.0.0.1:5020'}
     res = requests.post('http://'+PRODUCER_ADDRESS+'/new_ride_matching_consumer', json=init_req)
-    print(res.text)
 
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
@@ -24,19 +23,25 @@ def main():
     def callback(ch, method, properties, body):
         body = body.decode('utf8').replace("'", '"')
         body = json.loads(body)
-        print('Time to sleep:',body['time'])
+        print("\n\n============================================")
+        print("Ride Request Received...")
+        print("Details of Request:")
+        print("\tPickup:",body['pickup'])
+        print("\tDestination:",body['destination'])
+        print("\tCost:",body['cost'])
+        print("\tSeats:",body['seats'])
+        print("\nProcessing Request...")
+        print('Estimated Time To Process:',body['time'])
         
         sleep(body['time'])
 
-        print(" [x] Received %r" % body)
-        
+        print("Processing Done...")
         print("Task ID:",body['taskid'])
         print("Consumer ID:",CONSUMER_ID)
+        print("============================================\n\n")
 
         
     channel.basic_consume(queue='ride_match', on_message_callback=callback, auto_ack=True)
-
-    print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
 
 if __name__ == '__main__':

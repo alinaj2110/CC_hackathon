@@ -3,11 +3,25 @@
 version: "2.1"
 services:
   rabbitMQ_server:
-    image: rabbitmq
+    image: 'rabbitmq'
     container_name: 'rabbitmq'
     ports:
-      - "5672:5672"
-    restart: "no"
+      - 5672:5672
+      - 15672:15672
+    restart: "on-failure"
+    networks: 
+      - default
+    logging:
+      driver: none
+
+  mongodb:
+    image: 'mongo'
+    container_name: 'mongo'
+    ports:
+      - 27017:27017
+    logging:
+      driver: none
+  
   producer:
     container_name: 'producer'
     build:
@@ -15,9 +29,21 @@ services:
       context: .
     restart: "no"
     ports:
-      - "5000"
+      - 5000:5000
     depends_on:
       - rabbitMQ_server
+
+  ride_database:
+    container_name: 'ride_database'
+    build:
+      dockerfile: Dockerfile_database
+      context: .
+    restart: "no"
+    depends_on:
+      - mongodb
+      - producer
+      - rabbitMQ_server
+   
   ride_matching:
     container_name: 'ride_matching'
     build:
@@ -27,15 +53,12 @@ services:
       - producer
       - rabbitMQ_server
     environment:
-      - CONSUMER_ID= 12345
-      - PRODUCER_ADDRESS= 'http://localhost:5000'
-  ride_database:
-    container_name: 'ride_database'
-    build:
-      dockerfile: Dockerfile_database
-      context: .
-    restart: "no"
-    depends_on:
-      - producer
-      - rabbitMQ_server
+      - CONSUMER_ID=12345
+      - PRODUCER_ADDRESS=producer:5000
+
+networks:
+  default:
+    driver: bridge
+
+
   

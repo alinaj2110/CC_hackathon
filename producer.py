@@ -4,7 +4,6 @@ import pika
 import json
 from time import sleep
 
-sleep(60)
 
 app = Flask(__name__)
 
@@ -34,7 +33,7 @@ def new_ride_matching_consumer():
 
 def rabbitclient(rqueue,rrouting_key, rbody):
     connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host='localhost'))
+            pika.ConnectionParameters(host='rabbitmq'))
 
     channel = connection.channel()
 
@@ -45,4 +44,4 @@ def rabbitclient(rqueue,rrouting_key, rbody):
     connection.close()
 
 if __name__ == '__main__':
-	app.run()
+	app.run(host='0.0.0.0',port=5000)

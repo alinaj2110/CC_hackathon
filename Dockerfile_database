@@ -6,4 +6,4 @@ RUN pip install pika
 
 COPY database_consumer.py database_consumer.py
 
-CMD ["python", "database_consumer.py"]
+CMD ["python","-u","database_consumer.py"]

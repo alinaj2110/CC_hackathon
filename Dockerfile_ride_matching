@@ -6,4 +6,4 @@ RUN pip install pika
 
 COPY ride_matching_consumer.py ride_matching_consumer.py
 
-CMD ["python", "ride_matching_consumer.py"]
+CMD ["python","-u", "ride_matching_consumer.py"]

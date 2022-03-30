@@ -6,14 +6,14 @@ import json
 import pymongo
 from time import sleep
 
-sleep(90)
+sleep(10)
 
-client = pymongo.MongoClient("localhost", 27017)
+client = pymongo.MongoClient("mongo", 27017)
 db = client.consumerdb
 collection = db.consumers
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
 
     channel.queue_declare(queue='database')
